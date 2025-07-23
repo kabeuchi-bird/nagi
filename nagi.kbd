@@ -14,15 +14,23 @@
     spc
 )
 
+;; テンプレート宣言。モディファイアキーを押さないなら薙刀式、押すならqwerty
 (deftemplate stroke (key) (fork (chord nagi $key) $key (lctrl rctrl lmeta rmeta lalt ralt lshift rshift)))
 
-(deflayer single
-    (t! stroke q) (t! stroke w) (t! stroke e) (t! stroke r) up   down (t! stroke u) (t! stroke i) (t! stroke o) (t! stroke p)
-    (t! stroke a) (t! stroke s) (t! stroke d) (t! stroke f) (t! stroke g) (t! stroke h) (t! stroke j) (t! stroke k) (t! stroke l) (t! stroke ;)
-    (t! stroke z) (t! stroke x) (t! stroke c) (t! stroke v) (t! stroke b) (t! stroke n) (t! stroke m) (t! stroke ,) (t! stroke .) (t! stroke /)
-    (tap-hold-press $timeout 500 spc (layer-while-held shifted))
+;; エイリアス宣言。式に別名をつける
+(defalias
+    sands    (tap-hold-press $timeout 500 spc (layer-while-held shifted))
 )
 
+;; 単押しレイヤー。先ほどのテンプレートを展開し、各キーに対応させる
+(deflayer single
+    (t! stroke q) (t! stroke w) (t! stroke e) (t! stroke r) (t! stroke t) (t! stroke y) (t! stroke u) (t! stroke i) (t! stroke o) (t! stroke p)
+    (t! stroke a) (t! stroke s) (t! stroke d) (t! stroke f) (t! stroke g) (t! stroke h) (t! stroke j) (t! stroke k) (t! stroke l) (t! stroke ;)
+    (t! stroke z) (t! stroke x) (t! stroke c) (t! stroke v) (t! stroke b) (t! stroke n) (t! stroke m) (t! stroke ,) (t! stroke .) (t! stroke /)
+    @sands
+)
+
+;; シフトレイヤー。マクロは複数キーを順番に入力する
 (deflayer shifted
     XX   🔣ぬ   🔣り   🔣め   XX   XX   🔣さ   🔣よ   🔣え   🔣ゆ
     🔣せ   🔣み   🔣に   🔣ま   🔣ち   🔣や   🔣の   🔣も   🔣つ   🔣ふ
@@ -30,10 +38,13 @@
     XX
 )
 
+;; 薙刀式をコードで定義する
 (defchords nagi $timeout
     (w) 🔣き
     (e) 🔣て
     (r) 🔣し
+    (t) up
+    (y) down
     (u) bks
     (i) 🔣る
     (o) 🔣す
