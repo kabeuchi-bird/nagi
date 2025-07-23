@@ -11,80 +11,23 @@
     q    w    e    r    t    y    u    i    o    p
     a    s    d    f    g    h    j    k    l    ;
     z    x    c    v    b    n    m    ,    .    /
-    lshift spc rshift
+    spc
 )
+
+(deftemplate stroke (key) (fork (chord nagi $key) $key (lctrl rctrl lmeta rmeta lalt ralt lshift rshift)))
 
 (deflayer single
     (t! stroke q) (t! stroke w) (t! stroke e) (t! stroke r) up   down (t! stroke u) (t! stroke i) (t! stroke o) (t! stroke p)
     (t! stroke a) (t! stroke s) (t! stroke d) (t! stroke f) (t! stroke g) (t! stroke h) (t! stroke j) (t! stroke k) (t! stroke l) (t! stroke ;)
     (t! stroke z) (t! stroke x) (t! stroke c) (t! stroke v) (t! stroke b) (t! stroke n) (t! stroke m) (t! stroke ,) (t! stroke .) (t! stroke /)
-    @ime-off @sands-nagi @ime-on
-)
-
-(deftemplate stroke (key) (fork (chord nagi $key) $key (lctrl rctrl lmeta rmeta lalt ralt lshift rshift)))
-
-(defalias
-    sands-nagi (tap-hold-press $timeout 500 spc (layer-while-held shifted))
-    sands-qwerty (tap-hold-press $timeout 500 spc lshift)
-    ime-off (tap-hold-press $timeout 500 (multi (arbitrary-code 26) (layer-switch qwerty)) lshift)
-    ime-on (tap-hold-press $timeout 500 (multi (arbitrary-code 22) (layer-switch single)) rshift)
+    (tap-hold-press $timeout 500 spc (layer-while-held shifted))
 )
 
 (deflayer shifted
     XX   🔣ぬ   🔣り   🔣め   XX   XX   🔣さ   🔣よ   🔣え   🔣ゆ
     🔣せ   🔣み   🔣に   🔣ま   🔣ち   🔣や   🔣の   🔣も   🔣つ   🔣ふ
     XX   XX   🔣を   (macro 🔣、 ret) 🔣む   🔣お   (macro 🔣。 ret) 🔣ね   🔣わ   🔣れ
-    XX     XX  XX
-)
-
-(deflayer symbol-1
-    (macro 🔣※) (macro 🔣★) (macro 🔣◆) 🔣・   🔣〇   XX   XX   XX   XX   XX
-    @3dot (macro 🔣（ ret) (macro 🔣？ ret) (macro 🔣「 ret) (macro 🔣【 ret) XX   XX   XX   XX   XX
-    @dash (macro 🔣） ret) (macro 🔣！ ret) (macro 🔣」 ret) (macro 🔣】 ret) XX   XX   XX   XX   XX
-    XX     XX  XX
-)
-
-(deflayer symbol-2  
-    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-    (macro 🔣《 ret) (macro 🔣《 ret) (macro 🔣？ ret) (macro 🔣『 ret) (macro 🔣《 ret) XX   XX   XX   XX   XX
-    (macro 🔣》 ret) (macro 🔣》 ret) (macro 🔣！ ret) (macro 🔣』 ret) (macro 🔣》 ret) XX   XX   XX   XX   XX
-    XX     XX  XX
-)
-
-(deflayer markdown
-    (macro 1 . spc) (macro 🔣> spc) (macro 🔣* 🔣* ) (macro - f8 spc) XX   XX   XX   XX   XX   XX
-    XX   XX   @h3  @h2  XX   XX   XX   XX   XX   XX
-    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-    XX     XX  XX
-)
-
-(defalias
-    3dot (macro 🔣… $macro-delay 🔣…)
-    dash (macro 🔣— $macro-delay 🔣— ret)
-
-    h2 (macro 🔣# $macro-delay 🔣# S-spc)
-    h3 (macro 🔣# $macro-delay 🔣# $macro-delay 🔣# S-spc)
-)
-
-(deflayer edit-1
-    XX   XX   XX   XX   XX   XX   home up   end  XX
-    lrld XX   XX   XX   XX   XX   left down right XX
-    XX   XX   XX   XX   XX   XX   XX   XX   XX   XX
-    XX     XX  XX
-)
-
-(deflayer edit-2
-    XX   XX   XX   XX   XX   XX   (multi shft home) (multi shft up) (multi shft end) XX
-    lrld XX   XX   XX   XX   XX   (multi shft left) (multi shft down) (multi shft right) XX
-    XX   XX   XX   XX   XX   conv (multi shft ret) XX   XX   XX
-    XX     XX  XX
-)
-
-(deflayer qwerty
-    q    w    e    r    t    y    u    i    o    p
-    a    s    d    f    g    h    j    k    l    ;
-    z    x    c    v    b    n    m    ,    .    /
-    @ime-off @sands-qwerty @ime-on
+    XX
 )
 
 (defchords nagi $timeout
@@ -228,10 +171,5 @@
     (h n f) (macro 🔣ぐ 🔣ぉ)
     (h . f) (macro 🔣ぐ 🔣ゎ)
 
-    (j k) (layer-while-held symbol-1)
-    (m ,) (layer-while-held symbol-2)
-    (m k) (layer-while-held markdown)
-    (d f) (layer-while-held edit-1)
-    (c v) (layer-while-held edit-2)
     (v m) ret
 )
