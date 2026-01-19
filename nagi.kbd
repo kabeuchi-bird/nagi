@@ -8,6 +8,7 @@
 )
 
 (defsrc
+    grv
     q    w    e    r    t    y    u    i    o    p
     a    s    d    f    g    h    j    k    l    ;
     z    x    c    v    b    n    m    ,    .    /
@@ -22,8 +23,18 @@
     sands    (tap-hold-press $timeout 500 spc (layer-while-held shifted))
 )
 
+;; qwertyをそのまま通すレイヤー
+(deflayer qwerty
+    (multi grv (layer-switch single))
+    _    _    _    _    _    _    _    _    _    _
+    _    _    _    _    _    _    _    _    _    _
+    _    _    _    _    _    _    _    _    _    _
+    _
+)
+
 ;; 単押しレイヤー。先ほどのテンプレートを展開し、各キーに対応させる
 (deflayer single
+    (multi grv (layer-switch qwerty))
     (t! stroke q) (t! stroke w) (t! stroke e) (t! stroke r) (t! stroke t) (t! stroke y) (t! stroke u) (t! stroke i) (t! stroke o) (t! stroke p)
     (t! stroke a) (t! stroke s) (t! stroke d) (t! stroke f) (t! stroke g) (t! stroke h) (t! stroke j) (t! stroke k) (t! stroke l) (t! stroke ;)
     (t! stroke z) (t! stroke x) (t! stroke c) (t! stroke v) (t! stroke b) (t! stroke n) (t! stroke m) (t! stroke ,) (t! stroke .) (t! stroke /)
@@ -32,155 +43,156 @@
 
 ;; シフトレイヤー。マクロは複数キーを順番に入力する
 (deflayer shifted
-    XX   🔣ぬ   🔣り   🔣め   XX   XX   🔣さ   🔣よ   🔣え   🔣ゆ
-    🔣せ   🔣み   🔣に   🔣ま   🔣ち   🔣や   🔣の   🔣も   🔣つ   🔣ふ
-    XX   XX   🔣を   (macro 🔣、 ret) 🔣む   🔣お   (macro 🔣。 ret) 🔣ね   🔣わ   🔣れ
+    XX
+    XX   (macro n u) (macro r i) (macro m e) XX   XX   (macro s a) (macro y o) (macro e) (macro y u)
+    (macro s e) (macro m i) (macro n i) (macro m a) (macro t i) (macro y a) (macro n o) (macro m o) (macro t u) (macro h u)
+    XX   XX   (macro w o) (macro , ret) (macro m u) (macro o) (macro . ret) (macro n e) (macro w a) (macro r e)
     XX
 )
 
 ;; 薙刀式をコードで定義する
 (defchords nagi $timeout
-    (w) 🔣き
-    (e) 🔣て
-    (r) 🔣し
+    (w) (macro k i)
+    (e) (macro t e)
+    (r) (macro s i)
     (t) up
     (y) down
     (u) bks
-    (i) 🔣る
-    (o) 🔣す
-    (p) 🔣へ
-    (a) 🔣ろ
-    (s) 🔣け
-    (d) 🔣と
-    (f) 🔣か
-    (g) 🔣っ
-    (h) 🔣く
-    (j) 🔣あ
-    (k) 🔣い
-    (l) 🔣う
-    (;) 🔣ー
-    (z) 🔣ほ
-    (x) 🔣ひ
-    (c) 🔣は
-    (v) 🔣こ
-    (b) 🔣そ
-    (n) 🔣た
-    (m) 🔣な
-    (,) 🔣ん
-    (.) 🔣ら
-    (/) 🔣れ
+    (i) (macro r u)
+    (o) (macro s u)
+    (p) (macro h e)
+    (a) (macro r o)
+    (s) (macro k e)
+    (d) (macro t o)
+    (f) (macro k a)
+    (g) (macro x t u)
+    (h) (macro k u)
+    (j) a
+    (k) i
+    (l) u
+    (;) -
+    (z) (macro h o)
+    (x) (macro h i)
+    (c) (macro h a)
+    (v) (macro k o)
+    (b) (macro s o)
+    (n) (macro t a)
+    (m) (macro n a)
+    (,) (macro n n)
+    (.) (macro r a)
+    (/) (macro r e)
 
-    (w j) 🔣ぎ
-    (e j) 🔣で
-    (r j) 🔣じ
-    (u f) 🔣ざ
-    (o f) 🔣ず
-    (p f) 🔣べ
-    (a j) 🔣ぜ
-    (s j) 🔣げ
-    (d j) 🔣ど
-    (f j) 🔣が
-    (g j) 🔣ぢ
-    (h f) 🔣ぐ
-    (l f) 🔣づ
-    (; f) 🔣ぶ
-    (z j) 🔣ぼ
-    (x j) 🔣び
-    (c j) 🔣ば
-    (v j) 🔣ご
-    (b j) 🔣ぞ
-    (n f) 🔣だ
+    (w j) (macro g i)
+    (e j) (macro d e)
+    (r j) (macro z i)
+    (u f) (macro z a)
+    (o f) (macro z u)
+    (p f) (macro b e)
+    (a j) (macro z e)
+    (s j) (macro g e)
+    (d j) (macro d o)
+    (f j) (macro g a)
+    (g j) (macro d i)
+    (h f) (macro g u)
+    (l f) (macro d u)
+    (; f) (macro b u)
+    (z j) (macro b o)
+    (x j) (macro b i)
+    (c j) (macro b a)
+    (v j) (macro g o)
+    (b j) (macro z o)
+    (n f) (macro d a)
 
-    (w h) (macro 🔣き 🔣ゃ)
-    (e h) (macro 🔣り 🔣ゃ)
-    (r h) (macro 🔣し 🔣ゃ)
-    (s h) (macro 🔣み 🔣ゃ)
-    (d h) (macro 🔣に 🔣ゃ)
-    (g h) (macro 🔣ち 🔣ゃ)
-    (x h) (macro 🔣ひ 🔣ゃ)
+    (w h) (macro k y a)
+    (e h) (macro r y a)
+    (r h) (macro s y a)
+    (s h) (macro m y a)
+    (d h) (macro n y a)
+    (g h) (macro t y a)
+    (x h) (macro h y a)
 
-    (w p) (macro 🔣き 🔣ゅ)
-    (e p) (macro 🔣り 🔣ゅ)
-    (r p) (macro 🔣し 🔣ゅ)
-    (s p) (macro 🔣み 🔣ゅ)
-    (d p) (macro 🔣に 🔣ゅ)
-    (g p) (macro 🔣ち 🔣ゅ)
-    (x p) (macro 🔣ひ 🔣ゅ)
+    (w p) (macro k y u)
+    (e p) (macro r y u)
+    (r p) (macro s y u)
+    (s p) (macro m y u)
+    (d p) (macro n y u)
+    (g p) (macro t y u)
+    (x p) (macro h y u)
 
-    (w i) (macro 🔣き 🔣ょ)
-    (e i) (macro 🔣り 🔣ょ)
-    (r i) (macro 🔣し 🔣ょ)
-    (s i) (macro 🔣み 🔣ょ)
-    (d i) (macro 🔣に 🔣ょ)
-    (g i) (macro 🔣ち 🔣ょ)
-    (x i) (macro 🔣ひ 🔣ょ)
+    (w i) (macro k y o)
+    (e i) (macro r y o)
+    (r i) (macro s y o)
+    (s i) (macro m y o)
+    (d i) (macro n y o)
+    (g i) (macro t y o)
+    (x i) (macro h y o)
 
-    (w h j) (macro 🔣ぎ 🔣ゃ)
-    (r h j) (macro 🔣じ 🔣ゃ)
-    (g h j) (macro 🔣ぢ 🔣ゃ)
-    (x h j) (macro 🔣び 🔣ゃ)
+    (w h j) (macro g y a)
+    (r h j) (macro z y a)
+    (g h j) (macro d y a)
+    (x h j) (macro b y a)
 
-    (w p j) (macro 🔣ぎ 🔣ゅ)
-    (r p j) (macro 🔣じ 🔣ゅ)
-    (g p j) (macro 🔣ぢ 🔣ゅ)
-    (x p j) (macro 🔣び 🔣ゅ)
+    (w p j) (macro g y u)
+    (r p j) (macro z y u)
+    (g p j) (macro d y u)
+    (x p j) (macro b y u)
 
-    (w i j) (macro 🔣ぎ 🔣ょ)
-    (r i j) (macro 🔣じ 🔣ょ)
-    (g i j) (macro 🔣ぢ 🔣ょ)
-    (x i j) (macro 🔣び 🔣ょ)
+    (w i j) (macro g y o)
+    (r i j) (macro z y o)
+    (g i j) (macro d y o)
+    (x i j) (macro b y o)
 
-    (z m) 🔣ぽ
-    (x m) 🔣ぴ
-    (c m) 🔣ぱ
-    (p v) 🔣ぺ
-    (; v) 🔣ぷ
-    
-    (x m h) (macro 🔣ぴ 🔣ゃ)
-    (x m p) (macro 🔣ぴ 🔣ゅ)
-    (x m i) (macro 🔣ぴ 🔣ょ)
+    (z m) (macro p o)
+    (x m) (macro p i)
+    (c m) (macro p a)
+    (p v) (macro p e)
+    (; v) (macro p u)
 
-    (q j) 🔣ぁ
-    (q k) 🔣ぃ
-    (q l) 🔣ぅ
-    (q o) 🔣ぇ
-    (q n) 🔣ぉ
-    (q h) 🔣ゃ
-    (q p) 🔣ゅ
-    (q i) 🔣ょ
-    (q .) 🔣ゎ
+    (x m h) (macro p y a)
+    (x m p) (macro p y u)
+    (x m i) (macro p y o)
 
-    (e m k) (macro 🔣て 🔣ぃ)
-    (e j k) (macro 🔣で 🔣ぃ)
-    (d m l) (macro 🔣と 🔣ぅ)
-    (d j l) (macro 🔣ど 🔣ぅ)
-    (e m p) (macro 🔣て 🔣ゅ)
-    (e j p) (macro 🔣で 🔣ゅ)
-    (r m o) (macro 🔣し 🔣ぇ)
-    (g m o) (macro 🔣ち 🔣ぇ)
-    (r j o) (macro 🔣じ 🔣ぇ)
-    (g j o) (macro 🔣ぢ 🔣ぇ)
+    (q j) (macro x a)
+    (q k) (macro x i)
+    (q l) (macro x u)
+    (q o) (macro x e)
+    (q n) (macro x o)
+    (q h) (macro x y a)
+    (q p) (macro x y u)
+    (q i) (macro x y o)
+    (q .) (macro x w a)
 
-    (l k v) (macro 🔣う 🔣ぃ)
-    (l o v) (macro 🔣う 🔣ぇ)
-    (l n v) (macro 🔣う 🔣ぉ)
-    (k o v) (macro 🔣い 🔣ぇ)
-    (l j v) (macro 🔣つ 🔣ぁ)
-    (; j v) (macro 🔣ふ 🔣ぁ)
-    (; k v) (macro 🔣ふ 🔣ぃ)
-    (; o v) (macro 🔣ふ 🔣ぇ)
-    (; n v) (macro 🔣ふ 🔣ぉ)
-    (; p v) (macro 🔣ふ 🔣ゅ)
-    (h j v) (macro 🔣く 🔣ぁ)
-    (h k v) (macro 🔣く 🔣ぃ)
-    (h o v) (macro 🔣く 🔣ぇ)
-    (h n v) (macro 🔣く 🔣ぉ)
-    (h . v) (macro 🔣く 🔣ゎ)
-    (h k f) (macro 🔣ぐ 🔣ぁ)
-    (h l f) (macro 🔣ぐ 🔣ぃ)
-    (h o f) (macro 🔣ぐ 🔣ぇ)
-    (h n f) (macro 🔣ぐ 🔣ぉ)
-    (h . f) (macro 🔣ぐ 🔣ゎ)
+    (e m k) (macro t h i)
+    (e j k) (macro d h i)
+    (d m l) (macro t w u)
+    (d j l) (macro d w u)
+    (e m p) (macro t h u)
+    (e j p) (macro d h u)
+    (r m o) (macro s h e)
+    (g m o) (macro c h e)
+    (r j o) (macro j e)
+    (g j o) (macro d y e)
+
+    (l k v) (macro w i)
+    (l o v) (macro w e)
+    (l n v) (macro w o)
+    (k o v) (macro y e)
+    (l j v) (macro t s a)
+    (; j v) (macro f a)
+    (; k v) (macro f i)
+    (; o v) (macro f e)
+    (; n v) (macro f o)
+    (; p v) (macro f y u)
+    (h j v) (macro q a)
+    (h k v) (macro q i)
+    (h o v) (macro q e)
+    (h n v) (macro q o)
+    (h . v) (macro q w a)
+    (h k f) (macro g w a)
+    (h l f) (macro g w i)
+    (h o f) (macro g w e)
+    (h n f) (macro g w o)
+    (h . f) (macro g u x w a)
 
     (v m) ret
 )
