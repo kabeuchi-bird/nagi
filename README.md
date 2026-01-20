@@ -13,7 +13,7 @@ Linuxの自環境（Cachyos, KDE Plasma （wayland）, fcitx5-mozc）上で動�
 
 ## 薙刀式バージョン
 
-v16快速版
+v17 ベスト版
 
 ## 使い方
 
