@@ -44,9 +44,9 @@
 ;; シフトレイヤー。マクロは複数キーを順番に入力する
 (deflayer shifted
     XX
-    XX   (macro n u) (macro r i) (macro m e) XX   XX   (macro s a) (macro y o) (macro e) (macro y u)
+    XX   (macro m e) (macro r i) (macro n e) XX   XX   (macro s a) (macro y o) (macro e) (macro y u)
     (macro s e) (macro m i) (macro n i) (macro m a) (macro t i) (macro y a) (macro n o) (macro m o) (macro t u) (macro h u)
-    XX   XX   (macro w o) (macro , ret) (macro m u) (macro o) (macro . ret) (macro n e) (macro w a) (macro r e)
+    XX   XX   (macro w o) (macro , ret) (macro n u) (macro o) (macro . ret) (macro m u) (macro w a) (macro r e)
     XX
 )
 
