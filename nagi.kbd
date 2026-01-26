@@ -1,62 +1,68 @@
 (defvar
     timeout 100
-    macro-delay 10
+    macro-delay 6
 )
 
 (defcfg
+    ;; 未定義キーを生のまま通す
     process-unmapped-keys yes
 )
 
+;; ソース宣言。キーマップ変更前のマッピングをここで定義する
 (defsrc
-    grv
+    grv 1 2   3    4    5    6    7    8    9    0    -
     q    w    e    r    t    y    u    i    o    p
     a    s    d    f    g    h    j    k    l    ;
-    z    x    c    v    b    n    m    ,    .    /
+    lshift z    x    c    v    b    n    m    ,    .    / rshift
     spc
 )
 
-;; テンプレート宣言。モディファイアキーを押さないなら薙刀式、押すならqwerty
-(deftemplate stroke (key) (fork (chord nagi $key) $key (lctrl rctrl lmeta rmeta lalt ralt lshift rshift)))
+;; テンプレート宣言。Shift以外のモディファイアキーを押さないなら薙刀式、押すならqwerty
+(deftemplate stroke (key) (fork (chord nagi $key) $key (lctrl rctrl lmeta rmeta lalt ralt rshift)))
 
 ;; エイリアス宣言。式に別名をつける
 (defalias
-    sands    (tap-hold-press $timeout 500 spc (layer-while-held shifted))
+    sands    (tap-hold-press $timeout 300 spc (layer-while-held shifted)) ;;SandS。単打ではスペース、長押しでシフト
+    ngsft    (layer-while-held shifted) ;;薙刀式用のシフト
+    goqwr    (multi grv (layer-switch qwerty)) ;;かな ←  英数の切り替え
+    gonag    (multi grv (layer-switch single)) ;;かな  → 英数の切り替え
 )
 
-;; qwertyをそのまま通すレイヤー
+;; qwertyをそのまま通すレイヤー。半角・全角キーとh・j同時押しは置換え
 (deflayer qwerty
-    (multi grv (layer-switch single))
-    _    _    _    _    _    _    _    _    _    _
-    _    _    _    _    _    _    _    _    _    _
-    _    _    _    _    _    _    _    _    _    _
+    @gonag _ _ _ _ _ _ _ _ _ _ _
+    _ _ _ _ _ _ _ _ _ _
+    _ _ _ _ _ (chord qwerty h) (chord qwerty j) _ _ _
+    _ _ _ _ _ _ _ _ _ _ _ _
     _
 )
 
-;; 単押しレイヤー。先ほどのテンプレートを展開し、各キーに対応させる
+;; 単押しレイヤー。テンプレートを展開し、各キーに対応させる
 (deflayer single
-    (multi grv (layer-switch qwerty))
+    @goqwr _ _ _ _ _ _ _ _ _ _ /
     (t! stroke q) (t! stroke w) (t! stroke e) (t! stroke r) (t! stroke t) (t! stroke y) (t! stroke u) (t! stroke i) (t! stroke o) (t! stroke p)
     (t! stroke a) (t! stroke s) (t! stroke d) (t! stroke f) (t! stroke g) (t! stroke h) (t! stroke j) (t! stroke k) (t! stroke l) (t! stroke ;)
-    (t! stroke z) (t! stroke x) (t! stroke c) (t! stroke v) (t! stroke b) (t! stroke n) (t! stroke m) (t! stroke ,) (t! stroke .) (t! stroke /)
+    _ (t! stroke z) (t! stroke x) (t! stroke c) (t! stroke v) (t! stroke b) (t! stroke n) (t! stroke m) (t! stroke ,) (t! stroke .) (t! stroke /) @ngsft
     @sands
 )
 
 ;; シフトレイヤー。マクロは複数キーを順番に入力する
 (deflayer shifted
-    XX
-    XX   (macro m e) (macro r i) (macro n e) XX   XX   (macro s a) (macro y o) (macro e) (macro y u)
+    XX S-1 S-2 S-3 S-4 S-5 S-6 S-7 S-8 S-9 S-0 S-/
+    XX   (macro m e) (macro r i) (macro n e) up   down   (macro s a) (macro y o) (macro e) (macro y u)
     (macro s e) (macro m i) (macro n i) (macro m a) (macro t i) (macro y a) (macro n o) (macro m o) (macro t u) (macro h u)
-    XX   XX   (macro w o) (macro , ret) (macro n u) (macro o) (macro . ret) (macro m u) (macro w a) (macro r e)
-    XX
+    XX    XX   XX   (macro w o) (macro , ret) (macro n u) (macro o) (macro . ret) (macro m u) (macro w a) (macro r e) XX
+    spc
 )
 
 ;; 薙刀式をコードで定義する
 (defchords nagi $timeout
+    ;;単打
     (w) (macro k i)
     (e) (macro t e)
     (r) (macro s i)
-    (t) up
-    (y) down
+    (t) left
+    (y) right
     (u) bks
     (i) (macro r u)
     (o) (macro s u)
@@ -82,6 +88,7 @@
     (.) (macro r a)
     (/) (macro r e)
 
+    ;;濁音
     (w j) (macro g i)
     (e j) (macro d e)
     (r j) (macro z i)
@@ -103,6 +110,7 @@
     (b j) (macro z o)
     (n f) (macro d a)
 
+    ;;や拗音
     (w h) (macro k y a)
     (e h) (macro r y a)
     (r h) (macro s y a)
@@ -111,6 +119,7 @@
     (g h) (macro t y a)
     (x h) (macro h y a)
 
+    ;;ゆ拗音
     (w p) (macro k y u)
     (e p) (macro r y u)
     (r p) (macro s y u)
@@ -119,6 +128,7 @@
     (g p) (macro t y u)
     (x p) (macro h y u)
 
+    ;;よ拗音
     (w i) (macro k y o)
     (e i) (macro r y o)
     (r i) (macro s y o)
@@ -127,31 +137,44 @@
     (g i) (macro t y o)
     (x i) (macro h y o)
 
+    ;;や濁拗音
     (w h j) (macro g y a)
-    (r h j) (macro z y a)
+    (r h j) (macro j a)
     (g h j) (macro d y a)
     (x h j) (macro b y a)
 
+    ;;ゆ濁拗音
     (w p j) (macro g y u)
-    (r p j) (macro z y u)
+    (r p j) (macro j u)
     (g p j) (macro d y u)
     (x p j) (macro b y u)
 
+    ;;よ濁拗音
     (w i j) (macro g y o)
-    (r i j) (macro z y o)
+    (r i j) (macro j o)
     (g i j) (macro d y o)
     (x i j) (macro b y o)
 
+    ;;パ行（半濁音）
     (z m) (macro p o)
     (x m) (macro p i)
     (c m) (macro p a)
     (p v) (macro p e)
     (; v) (macro p u)
 
+    ;;パ行拗音
     (x m h) (macro p y a)
     (x m p) (macro p y u)
     (x m i) (macro p y o)
 
+    ;;ヴァ行
+    (l f j) (macro v a)
+    (l f k) (macro v i)
+    (l ; f) (macro v u)
+    (l f o) (macro v e)
+    (l f n) (macro v o)
+
+    ;;小書き
     (q j) (macro x a)
     (q k) (macro x i)
     (q l) (macro x u)
@@ -162,6 +185,7 @@
     (q i) (macro x y o)
     (q .) (macro x w a)
 
+    ;;小書き合成（外来音）
     (e m k) (macro t h i)
     (e j k) (macro d h i)
     (d m l) (macro t w u)
@@ -170,7 +194,6 @@
     (e j p) (macro d h u)
     (r m o) (macro s h e)
     (g m o) (macro c h e)
-    (r j o) (macro j e)
     (g j o) (macro d y e)
 
     (l k v) (macro w i)
@@ -194,5 +217,13 @@
     (h n f) (macro g w o)
     (h . f) (macro g u x w a)
 
+    ;;機能
     (v m) ret
+    (f g) @goqwr
+)
+
+(defchords qwerty $timeout
+    (h) h
+    (j) j
+    (h j) @gonag
 )
