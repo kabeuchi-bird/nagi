@@ -82,7 +82,7 @@
     _ _ _ _ _ _ _ _ _ _ _ _
     🔣｜ (macro spc spc spc 🔣✕ spc spc spc 🔣✕ spc spc spc 🔣✕) (macro home right end del del left) (macro home ret spc left) 🔣○ _ _ _ _ _
     🔣《 🔣【  (macro home right end del del del del left) (macro home ret spc spc spc left) (macro spc spc spc) _ _ _ _ _
-    _ 🔣》 🔣】 🔣♡ (macro 🔣」 ret 🔣「) (macro 🔣」 ret spc) _ _ _ _ _ _
+    _ 🔣》 🔣】 (macro 🔣」 ret) (macro 🔣」 ret 🔣「) (macro 🔣」 ret spc) _ _ _ _ _ _
     XX
 )
 ;; CVシフト
