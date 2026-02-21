@@ -1,6 +1,6 @@
 (defvar
     timeout 100
-    macro-delay 6
+    macro-delay 5
 )
 
 (defcfg
@@ -18,23 +18,26 @@
 )
 
 ;; テンプレート宣言。Shift以外のモディファイアキーを押さないなら薙刀式、押すならqwerty
-(deftemplate stroke (key) (fork (chord nagi $key) $key (lctrl rctrl lmeta rmeta lalt ralt rshift)))
+(deftemplate stroke (key) (fork (chord nagi $key) $key (lctrl rctrl lmeta rmeta lalt ralt lshift)))
 
 ;; エイリアス宣言。式に別名をつける
 (defalias
-    sands    (tap-hold-press $timeout 300 spc (layer-while-held shifted)) ;;SandS。単打ではスペース、長押しでシフト
     ngsft    (layer-while-held shifted) ;;薙刀式用のシフト
+    sands    (tap-hold-press $timeout 300 spc @ngsft) ;;SandS。単打ではスペース、長押しで薙刀式用シフト
     goqwr    (multi grv (layer-switch qwerty)) ;;かな ←  英数の切り替え
     gonag    (multi grv (layer-switch single)) ;;かな  → 英数の切り替え
 )
 
-;; qwertyをそのまま通すレイヤー。半角・全角キーとh・j同時押しは置換え
+;; qwertyをそのまま通すレイヤー。
+;; 半角・全角キー → qwerty・薙刀式とIMEの同時切り替え
+;; h・j同時押し   → 薙刀式へ切り替え
+;; スペース       → SandS（通常のシフト）
 (deflayer qwerty
     @gonag _ _ _ _ _ _ _ _ _ _ _
     _ _ _ _ _ _ _ _ _ _
     _ _ _ _ _ (chord qwerty h) (chord qwerty j) _ _ _
     _ _ _ _ _ _ _ _ _ _ _ _
-    _
+    (tap-hold-press $timeout 300 spc lshift)
 )
 
 ;; 単押しレイヤー。テンプレートを展開し、各キーに対応させる
@@ -49,10 +52,46 @@
 ;; シフトレイヤー。マクロは複数キーを順番に入力する
 (deflayer shifted
     XX S-1 S-2 S-3 S-4 S-5 S-6 S-7 S-8 S-9 S-0 S-/
-    XX   (macro m e) (macro r i) (macro n e) up   down   (macro s a) (macro y o) (macro e) (macro y u)
+    lrld   (macro m e) (macro r i) (macro n e) left   right   (macro s a) (macro y o) (macro e) (macro y u)
     (macro s e) (macro m i) (macro n i) (macro m a) (macro t i) (macro y a) (macro n o) (macro m o) (macro t u) (macro h u)
-    XX    XX   XX   (macro w o) (macro , ret) (macro n u) (macro o) (macro . ret) (macro m u) (macro w a) (macro r e) XX
-    spc
+    _ (macro h o) (macro h i) (macro w o) (macro , ret) (macro n u) (macro o) (macro . ret) (macro m u) (macro w a) (macro r e) XX
+    XX
+)
+
+;; 編集モードレイヤー。左右×中下で４面に分けて記述する
+;; JKシフト
+(deflayer jk-shifted
+    _ _ _ _ _ _ _ _ _ _ _ _
+    C-n / (macro d h i) C-s 🔣・ _ _ _ _ _
+    (macro 🔣… 🔣…) 🔣『 S-/ 🔣「 S-8 _ _ _ _ _
+    _ (macro 🔣― 🔣―) 🔣』 S-1 🔣」 S-9 _ _ _ _ _ _
+    XX
+)
+
+;; DFシフト
+(deflayer df-shifted
+    _ _ _ _ _ _ _ _ _ _ _ _
+    _ _ _ _ _ home (macro end bspc) f5 del esc
+    _ _ _ _ _ (macro ret end) up S-up (macro-repeat S-up 7) f7
+    _ _ _ _ _ _ end down S-down (macro-repeat S-down 7) f6 _
+    XX
+)
+
+;; M,シフト
+(deflayer m,-shifted
+    _ _ _ _ _ _ _ _ _ _ _ _
+    🔣｜ (macro spc spc spc 🔣✕ spc spc spc 🔣✕ spc spc spc 🔣✕) (macro home right end del del left) (macro home ret spc left) 🔣○ _ _ _ _ _
+    🔣《 🔣【  (macro home right end del del del del left) (macro home ret spc spc spc left) (macro spc spc spc) _ _ _ _ _
+    _ 🔣》 🔣】 🔣♡ (macro 🔣」 ret 🔣「) (macro 🔣」 ret spc) _ _ _ _ _ _
+    XX
+)
+;; CVシフト
+(deflayer cv-shifted
+    _ _ _ _ _ _ _ _ _ _ _ _
+    _ _ _ _ _ S-home C-x f5 C-v C-z
+    _ _ _ _ _ C-c left right (macro-repeat S-left 7) (macro-repeat S-right 7)
+    _ _ _ _ _ _ end S-left S-right C-S-down C-y _
+    XX
 )
 
 ;; 薙刀式をコードで定義する
@@ -61,9 +100,9 @@
     (w) (macro k i)
     (e) (macro t e)
     (r) (macro s i)
-    (t) left
-    (y) right
-    (u) bks
+    (t) up
+    (y) down
+    (u) bspc
     (i) (macro r u)
     (o) (macro s u)
     (p) (macro h e)
@@ -220,8 +259,16 @@
     ;;機能
     (v m) ret
     (f g) @goqwr
+
+    ;;編集モードへの移動
+    (d f) (layer-while-held df-shifted)
+    (j k) (layer-while-held jk-shifted)
+    (c v) (layer-while-held cv-shifted)
+    (m ,) (layer-while-held m,-shifted)
+
 )
 
+;; qwerty配列中のかな → 英数の切り替え
 (defchords qwerty $timeout
     (h) h
     (j) j
